@@ -8,13 +8,13 @@ fn main() -> IoResult<()> {
     if args.len() == 1 {
         println!("Running all programs");
         for (name, prog) in PROGS {
-            run_prog(prog, name)?;
+            run_prog(&prog[0], name)?;
         }
     } else {
         for arg in args {
             for (name, prog) in PROGS {
                 if name == &&arg {
-                    run_prog(prog, name)?;
+                    run_prog(&prog[0], name)?;
                 }
             }
         }
