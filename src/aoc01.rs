@@ -1,17 +1,17 @@
-use rustc_hash::FxHashSet;
+use bit_set::BitSet;
 
 pub(crate) fn run(data: &[u8]) -> String {
-    let mut singles = FxHashSet::default();
-    let mut acc: i16 = 0;
+    let mut singles = BitSet::with_capacity(2020);
+    let mut acc: usize = 0;
     let mut p1 = 0;
     let mut p2 = 0;
     data.iter().for_each(|i| {
-        let x: i16 = *i as i16;
-        if x >= '0' as i16 && x <= '9' as i16 {
+        let x = *i as usize;
+        if x >= '0' as usize && x <= '9' as usize {
             acc *= 10;
-            acc += x - '0' as i16;
+            acc += x - '0' as usize;
         } else {
-            if singles.contains(&(2020 - acc)) {
+            if singles.contains(2020 - acc) {
                 //println!("Part 1: {}", acc as i32 * (2020 - acc as i32));
                 p1 = acc as i32 * (2020 - acc as i32);
                 //exit(0);
@@ -33,9 +33,9 @@ pub(crate) fn run(data: &[u8]) -> String {
                         None => break,
                         Some(y) => {
                             let z = 2020 - x - y;
-                            if singles.contains(&z) {
+                            if singles.contains(z) {
                                 //println!("Part 2: {}", *x as i32 * *y as i32 * z as i32);
-                                p2 = *x as i32 * *y as i32 * z as i32;
+                                p2 = x * y * z;
                                 break 'p2;
                             }
                         }
