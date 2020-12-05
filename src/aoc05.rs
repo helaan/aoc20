@@ -1,7 +1,7 @@
 use bit_set::BitSet;
 
 #[inline]
-fn seat_nr(b: &[u8]) -> (usize, usize) {
+fn seat_nr(b: &[u8]) -> usize {
     let mut r = 0;
     for i in 0..7 {
         r *= 2;
@@ -12,18 +12,17 @@ fn seat_nr(b: &[u8]) -> (usize, usize) {
             //          panic!("bfbfbf");
         }
     }
-    let mut c = 0;
     for i in 7..10 {
-        c *= 2;
+        r *= 2;
         //print!("{}", b[i] as char);
         if b[i] == 'R' as u8 {
-            c += 1;
+            r += 1;
             //        } else if b[i] != 'L' as u8 {
             //          panic!("lrlrl");
         }
     }
     //println!(" => {} {} {}", r, c, r * 8 + c);
-    (r, c)
+    r
 }
 
 pub(crate) fn run(b: &[u8]) -> String {
@@ -33,8 +32,7 @@ pub(crate) fn run(b: &[u8]) -> String {
     let mut min = 1024;
     let mut seats = BitSet::with_capacity(1024);
     while p < len {
-        let (r, c) = seat_nr(&b[p..p + 10]);
-        let x = r * 8 + c;
+        let x = seat_nr(&b[p..p + 10]);
         if x > max {
             max = x
         }
