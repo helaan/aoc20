@@ -30,7 +30,7 @@ fn run_prog(prog: &FnAoc, name: &str) -> IoResult<()> {
     let output = prog(&input);
     let end_ts = Instant::now();
 
-    //println!("{}", output);
+    println!("{}", output);
     assert_eq!(*output.as_bytes(), *expected_output);
 
     let duration = end_ts.duration_since(start_ts);

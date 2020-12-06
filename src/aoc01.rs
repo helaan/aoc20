@@ -42,14 +42,14 @@ pub(crate) fn run(data: &[u8]) -> String {
                     match yi.next() {
                         None => break,
                         Some(y) => {
+                            if x + y > 2020 {
+                                break;
+                            }
                             let z = 2020 - x - y;
                             if singles.contains(z) {
                                 //println!("Part 2: {}", *x as i32 * *y as i32 * z as i32);
                                 p2 = x * y * z;
                                 break 'p2;
-                            } else if x + y > 2020 {
-                                //bitvec is sorted
-                                break;
                             }
                         }
                     }
