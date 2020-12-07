@@ -8,6 +8,7 @@ mod aoc03;
 mod aoc04;
 mod aoc05;
 mod aoc06;
+mod aoc07;
 
 pub type FnAoc = fn(&[u8]) -> String;
 
@@ -18,6 +19,7 @@ pub const PROGS: &[(&str, &[FnAoc])] = &[
     ("04", &[aoc04::run]),
     ("05", &[aoc05::run]),
     ("06", &[aoc06::run]),
+    ("07", &[aoc07::run]),
 ];
 
 pub fn map_file(path: String) -> IoResult<Mmap> {
@@ -29,6 +31,6 @@ pub fn execute(id: usize, data: &[u8]) -> Option<String> {
     if id >= PROGS.len() {
         return None;
     }
-    let f = PROGS[id-1].1[0];
+    let f = PROGS[id - 1].1[0];
     Some(f(data))
 }
