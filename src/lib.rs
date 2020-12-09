@@ -32,7 +32,7 @@ pub fn map_file(path: String) -> IoResult<Mmap> {
 }
 
 pub fn execute(id: usize, data: &[u8]) -> Option<String> {
-    if id >= PROGS.len() {
+    if id > PROGS.len() {
         return None;
     }
     let f = PROGS[id - 1].1[0];
