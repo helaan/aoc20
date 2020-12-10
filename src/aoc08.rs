@@ -86,7 +86,12 @@ pub(crate) fn run(data: &[u8]) -> String {
         }
     }
 
-    let p2 = (0..ops.len()).find_map(|x| eval(&ops, x)).unwrap();
+    let p2 = (0..ops.len())
+        .find_map(|x| match ops[x] {
+            Op::Acc(_) => None,
+            _ => eval(&ops, x),
+        })
+        .unwrap();
 
     format!("{} {}\n", acc, p2)
 }
