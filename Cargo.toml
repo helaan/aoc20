@@ -14,7 +14,7 @@ rustc-hash = "1.1"
 [dev-dependencies]
 criterion = "0.3"
 
-[profile.release]
+#[profile.release]
 #debug = true
 #lto = true
 #codegen-units = 1
