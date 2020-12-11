@@ -16,9 +16,9 @@ criterion = "0.3"
 
 [profile.release]
 #debug = true
-lto = true
-codegen-units = 1
+#lto = true
+#codegen-units = 1
 
 [[bench]]
-name = "aoc"
+name = "aoc-henk"
 harness = false
