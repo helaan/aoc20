@@ -1,42 +1,33 @@
-fn bitcnt(value: &u32) -> u32 {
-    let mut a = 0;
-    let mut x = *value;
-    while x != 0 {
-        x &= x - 1;
-        a += 1;
-    }
-    a
-}
-
 pub(crate) fn run(b: &[u8]) -> String {
     let len = b.len();
     let mut p = 0;
-    let mut ans = 0;
+    let mut ans: u32 = 0;
     let mut ans2: u32 = 0xffffffff;
 
     let mut sum = 0;
     let mut sum2 = 0;
 
+    let mut l = 0;
+
     while p < len {
-        if b[p] == '\n' as u8 {
-            sum += bitcnt(&ans);
-            ans = 0;
-            sum2 += bitcnt(&ans2);
-            ans2 = 0xffffffff;
+        if b[p] != '\n' as u8 {
+            l |= 1 << (b[p] - 'a' as u8);
         } else {
-            let mut l = 0;
-            while b[p] != '\n' as u8 {
-                let bit = 1 << (b[p] - 'a' as u8);
-                ans |= bit;
-                l |= bit;
-                p += 1;
+            if l != 0 {
+                ans |= l;
+                ans2 &= l;
+                l = 0;
+            } else {
+                sum += &ans.count_ones();
+                sum2 += &ans2.count_ones();
+                ans = 0;
+                ans2 = 0xffffffff;
             }
-            ans2 &= l;
         }
         p += 1;
     }
-    sum += bitcnt(&ans);
-    sum2 += bitcnt(&ans2);
+    sum += &ans.count_ones();
+    sum2 += &ans2.count_ones();
 
     format!("{} {}\n", sum, sum2)
 }
