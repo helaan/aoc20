@@ -1,27 +1,14 @@
-use bit_set::BitSet;
-
 #[inline]
 fn seat_nr(b: &[u8]) -> usize {
     let mut r = 0;
-    for i in 0..7 {
-        r *= 2;
-        //print!("{}", b[i] as char);
-        if b[i] == 'B' as u8 {
-            r += 1;
-            //        } else if b[i] != 'F' as u8 {
-            //          panic!("bfbfbf");
+    for c in b {
+        r <<= 1;
+        // B and R have bit 3 unset, while F and L have it set
+        // tnx Michiel
+        if c & 0b00000100 == 0 {
+            r |= 1;
         }
     }
-    for i in 7..10 {
-        r *= 2;
-        //print!("{}", b[i] as char);
-        if b[i] == 'R' as u8 {
-            r += 1;
-            //        } else if b[i] != 'L' as u8 {
-            //          panic!("lrlrl");
-        }
-    }
-    //println!(" => {} {} {}", r, c, r * 8 + c);
     r
 }
 
@@ -30,7 +17,8 @@ pub(crate) fn run(b: &[u8]) -> String {
     let len = b.len();
     let mut max = 0;
     let mut min = 1024;
-    let mut seats = BitSet::with_capacity(1024);
+    //let mut seats = BitSet::with_capacity(1024);
+    let mut seats = [0 as u32; 32];
     while p < len {
         let x = seat_nr(&b[p..p + 10]);
         if x > max {
@@ -39,9 +27,45 @@ pub(crate) fn run(b: &[u8]) -> String {
         if x < min {
             min = x
         }
-        seats.insert(x);
+        //seats.insert(x);
+        let v = 1 << (x % 32);
+        let k = x / 32;
+        seats[k] |= v;
         p += 11;
     }
-    let missing = (min..max).find(|x| !seats.contains(*x)).unwrap();
+    //let missing = (min..max).find(|x| !seats.contains(*x)).unwrap();
+    let missing: usize = ((min / 32 + 1)..32)
+        .find_map(|i| {
+            if seats[i] != std::u32::MAX {
+                let mut v = seats[i];
+                let mut x = 0;
+                let mut result;
+                loop {
+                    if v % 2 == 0 {
+                        result = 32 * i + x;
+                        break;
+                    }
+                    x += 1;
+                    v >>= 1;
+                }
+                if result > max {
+                    // look at the block with the minimum
+                    let mut v = seats[(min / 32)] >> (min % 32);
+                    let mut x = 0;
+                    loop {
+                        if v % 2 == 0 {
+                            result = min + x;
+                            break;
+                        }
+                        x += 1;
+                        v >>= 1;
+                    }
+                }
+                Some(result)
+            } else {
+                None
+            }
+        })
+        .unwrap();
     format!("{} {}\n", max, missing)
 }
