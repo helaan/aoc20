@@ -4,14 +4,14 @@ pub(crate) fn run(data: &[u8]) -> String {
 
     let mut ts: usize = (data[0] - '0' as u8) as usize;
 
-    while data[p] != '\n' as u8 {
+    while p < len && data[p] != '\n' as u8 {
         ts *= 10;
         ts += (data[p] - '0' as u8) as usize;
         p += 1;
     }
     p += 1;
 
-    let mut ids = Vec::new();
+    let mut ids = Vec::with_capacity(16);
     let mut offset = 0;
 
     while p < len {
@@ -35,9 +35,9 @@ pub(crate) fn run(data: &[u8]) -> String {
     }
     //dbg!(&ids);
 
-    let mut p1id = 0;
-    let mut wait = 9999;
-    for id in &ids {
+    let mut p1id = ids[0].0;
+    let mut wait = ids[0].0 as usize - ts % ids[0].0 as usize;
+    for id in &ids[1..] {
         let w = id.0 as usize - ts % id.0 as usize;
         if w < wait {
             p1id = id.0;
@@ -52,7 +52,8 @@ pub(crate) fn run(data: &[u8]) -> String {
     //dbg!(offset, d);
     for id in &ids[1..] {
         //dbg!(id.0);
-        while offset % id.0 as u64 != (id.0 - id.1) as u64 {
+        let w = (id.0 - id.1) as u64;
+        while offset % id.0 as u64 != w as u64 {
             offset += d;
             //dbg!(offset);
         }
