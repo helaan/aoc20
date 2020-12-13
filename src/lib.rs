@@ -14,6 +14,7 @@ mod aoc09;
 mod aoc10;
 mod aoc11;
 mod aoc12;
+mod aoc13;
 
 pub type FnAoc = fn(&[u8]) -> String;
 
@@ -30,6 +31,7 @@ pub const PROGS: &[(&str, &[FnAoc])] = &[
     ("10", &[aoc10::run]),
     ("11", &[aoc11::run]),
     ("12", &[aoc12::run]),
+    ("13", &[aoc13::run]),
 ];
 
 pub fn map_file(path: String) -> IoResult<Mmap> {
