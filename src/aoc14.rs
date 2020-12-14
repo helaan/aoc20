@@ -18,17 +18,36 @@ pub(crate) struct FloatMem {
 }
 
 impl FloatMem {
-    pub(crate) fn insert(&mut self, addr: u64, val: u64, maskx: u64, i: usize) {
-        if i != 36 {
-            if maskx & (1 << i) == 0 {
-                self.insert(addr, val, maskx, i + 1);
-            } else {
-                self.insert(addr, val, maskx, i + 1);
-                self.insert(addr ^ (1 << i), val, maskx, i + 1);
+    #[inline]
+    pub(crate) fn insert(&mut self, mut addr: u64, val: u64, maskx: u64) {
+        //dbg!(addr);
+        //dbg!(format!("{:0b}", addr));
+        let mut s = Vec::new();
+        for i in 0..36 {
+            if maskx & 1 << i != 0 {
+                s.push(1 << i);
+                addr &= !(1 << i);
             }
-        } else {
-            //println!("SET {:b} {}", addr, val);
+        }
+        //dbg!(format!("{:0b}", addr));
+        //dbg!(&s);
+
+        loop {
+            //println!("ins {}", addr);
             self.map.insert(addr, val);
+            let mut p = s.len() - 1;
+            while addr & s[p] != 0 {
+                if p == 0 {
+                    return;
+                }
+                p -= 1;
+            }
+            addr |= s[p];
+            p += 1;
+            while p < s.len() {
+                addr &= !(s[p]);
+                p += 1;
+            }
         }
     }
 }
@@ -76,7 +95,7 @@ pub(crate) fn run(data: &[u8]) -> String {
 
                 // println!("{:x} {:x} {:x} {:x}", addr, addr | mask1, data, maskx);
 
-                mem2.insert(addr | mask1, data, maskx, 0);
+                mem2.insert(addr | mask1, data, maskx);
 
                 data &= mask0;
                 data |= mask1;
