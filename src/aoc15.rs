@@ -10,11 +10,11 @@ pub(crate) fn run(data: &[u8]) -> String {
     let mut last: u32 = 0;
 
     for c in data {
-        if *c == ',' as u8 {
+        if *c == b',' {
             last_said_low[last as usize] = turn;
             turn += 1;
             last = 0;
-        } else if *c == '\n' as u8 {
+        } else if *c == b'\n' {
             break;
         } else {
             last *= 10;

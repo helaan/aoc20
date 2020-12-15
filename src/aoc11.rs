@@ -1,7 +1,7 @@
 use bit_set::BitSet;
 
 pub(crate) fn run(data: &[u8]) -> String {
-    let width = (0..data.len()).find(|x| data[*x] == '\n' as u8).unwrap();
+    let width = (0..data.len()).find(|x| data[*x] == b'\n').unwrap();
     let wwidth = width + 1;
     //dbg!(width);
     let height = data.len() / wwidth;
@@ -27,7 +27,7 @@ pub(crate) fn run(data: &[u8]) -> String {
         for y in 0..height {
             let ybase = y * (wwidth);
             for x in 0..width {
-                if data[ybase + x] == 'L' as u8 {
+                if data[ybase + x] == b'L' {
                     state_a.insert(ybase + x + sjoemel);
                 }
             }
@@ -95,28 +95,27 @@ pub(crate) fn run(data: &[u8]) -> String {
                         } else {
                             state_new.insert(ybase + x);
                         }
+                    } else if data[yrealbase + x] == b'L'
+                        && !state_old.contains(ybase + x - 1 - wwidth)
+                        && !state_old.contains(ybase + x - wwidth)
+                        && !state_old.contains(ybase + x + 1 - wwidth)
+                        && !state_old.contains(ybase + x - 1)
+                        && !state_old.contains(ybase + x + 1)
+                        && !state_old.contains(ybase + x - 1 + wwidth)
+                        && !state_old.contains(ybase + x + wwidth)
+                        && !state_old.contains(ybase + x + 1 + wwidth)
+                    {
+                        state_new.insert(ybase + x);
+                        changes = true;
                     } else {
-                        if data[yrealbase + x] == 'L' as u8
-                            && !state_old.contains(ybase + x - 1 - wwidth)
-                            && !state_old.contains(ybase + x - wwidth)
-                            && !state_old.contains(ybase + x + 1 - wwidth)
-                            && !state_old.contains(ybase + x - 1)
-                            && !state_old.contains(ybase + x + 1)
-                            && !state_old.contains(ybase + x - 1 + wwidth)
-                            && !state_old.contains(ybase + x + wwidth)
-                            && !state_old.contains(ybase + x + 1 + wwidth)
-                        {
-                            state_new.insert(ybase + x);
-                            changes = true;
-                        } else {
-                            state_new.remove(ybase + x);
-                        }
+                        state_new.remove(ybase + x);
                     }
                 }
             }
-            let tmp = state_old;
+            /*let tmp = state_old;
             state_old = state_new;
-            state_new = tmp;
+            state_new = tmp;*/
+            std::mem::swap(&mut state_old, &mut state_new);
         }
 
         let mut occupied = 0;
@@ -132,7 +131,7 @@ pub(crate) fn run(data: &[u8]) -> String {
         for y in 0..height {
             let ybase = y * wwidth;
             for x in 0..width {
-                if data[ybase + x] == 'L' as u8 {
+                if data[ybase + x] == b'L' {
                     chairix[ybase + x] = n;
                     n += 1;
                 }
@@ -142,7 +141,7 @@ pub(crate) fn run(data: &[u8]) -> String {
         for y in 0..height {
             let ybase = y * (wwidth);
             for x in 0..width {
-                if data[ybase + x] == 'L' as u8 {
+                if data[ybase + x] == b'L' {
                     chairs.push((
                         chairix[ybase + x],
                         dirs.iter()
@@ -155,7 +154,7 @@ pub(crate) fn run(data: &[u8]) -> String {
                                     {
                                         return None;
                                     }
-                                    if data[p as usize] == 'L' as u8 {
+                                    if data[p as usize] == b'L' {
                                         return Some(chairix[p as usize]);
                                     }
                                     p += *d as isize;
@@ -200,9 +199,10 @@ pub(crate) fn run(data: &[u8]) -> String {
                     }
                 }
             }
-            let tmp = state_old;
-            state_old = state_new;
-            state_new = tmp;
+            //let tmp = state_old;
+            //state_old = state_new;
+            //state_new = tmp;
+            std::mem::swap(&mut state_old, &mut state_new);
         }
         let mut occupied = 0;
         state_old.iter().for_each(|_| occupied += 1);

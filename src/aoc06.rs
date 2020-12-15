@@ -10,19 +10,17 @@ pub(crate) fn run(b: &[u8]) -> String {
     let mut l = 0;
 
     while p < len {
-        if b[p] != '\n' as u8 {
-            l |= 1 << (b[p] - 'a' as u8);
+        if b[p] != b'\n' {
+            l |= 1 << (b[p] - b'a');
+        } else if l != 0 {
+            ans |= l;
+            ans2 &= l;
+            l = 0;
         } else {
-            if l != 0 {
-                ans |= l;
-                ans2 &= l;
-                l = 0;
-            } else {
-                sum += &ans.count_ones();
-                sum2 += &ans2.count_ones();
-                ans = 0;
-                ans2 = 0xffffffff;
-            }
+            sum += &ans.count_ones();
+            sum2 += &ans2.count_ones();
+            ans = 0;
+            ans2 = 0xffffffff;
         }
         p += 1;
     }

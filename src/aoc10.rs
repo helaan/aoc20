@@ -2,12 +2,12 @@ pub(crate) fn run(data: &[u8]) -> String {
     let mut adapters = Vec::new();
     let mut wrk: u8 = 0;
     data.iter().for_each(|b| {
-        if *b == '\n' as u8 {
+        if *b == b'\n' {
             adapters.push(wrk);
             wrk = 0;
         } else {
             wrk *= 10;
-            wrk += b - '0' as u8;
+            wrk += b - b'0';
         }
     });
     assert_eq!(wrk, 0);
@@ -32,7 +32,7 @@ pub(crate) fn run(data: &[u8]) -> String {
     (1..cur + 4).for_each(|_| a.push(0));
     adapters.iter().for_each(|ad| {
         let min = if *ad >= 3 { *ad as usize - 3 } else { 0 };
-        a[*ad as usize] = a[min..*ad as usize].iter().fold(0, |acc, x| acc + x);
+        a[*ad as usize] = a[min..*ad as usize].iter().sum();
     });
 
     format!("{} {}\n", d1 * d3, a[cur as usize])

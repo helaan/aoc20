@@ -1,12 +1,12 @@
-fn slope(b: &[u8], dx: usize, dy: usize, width: usize) -> usize {
+fn slope(data: &[u8], dx: usize, dy: usize, width: usize) -> usize {
     let d = dx as usize + dy as usize * (width as usize + 1);
     let mut p = d;
     let mut t = 0;
-    let l = b.len();
+    let len = data.len();
     let mut x = dx;
-    while p < l {
+    while p < len {
         //println!("{} {} {}", x, p, b[p] as char);
-        if b[p] == '#' as u8 {
+        if data[p] == b'#' {
             t += 1
         }
         p += d;
@@ -22,7 +22,7 @@ fn slope(b: &[u8], dx: usize, dy: usize, width: usize) -> usize {
 pub(crate) fn run(b: &[u8]) -> String {
     let width = {
         let mut i = 0;
-        while b[i] != '\n' as u8 {
+        while b[i] != b'\n' {
             i += 1;
         }
         i

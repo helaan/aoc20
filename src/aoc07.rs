@@ -14,7 +14,7 @@ fn traverse1<'a>(
     }
 }
 
-fn traverse2<'a>(tree: &FxHashMap<&[u8], Vec<(u8, &[u8])>>, x: &[u8]) -> usize {
+fn traverse2(tree: &FxHashMap<&[u8], Vec<(u8, &[u8])>>, x: &[u8]) -> usize {
     let mut ans = 0;
     if let Some(v) = tree.get(x) {
         for y in v {
@@ -35,11 +35,11 @@ pub(crate) fn run(data: &[u8]) -> String {
     let len = data.len();
     while p < len {
         let name_start = p;
-        while data[p] != ' ' as u8 {
+        while data[p] != b' ' {
             p += 1;
         }
         p += 1;
-        while data[p] != ' ' as u8 {
+        while data[p] != b' ' {
             p += 1;
         } // now on space before bags
         let name = &data[name_start..p];
@@ -48,18 +48,18 @@ pub(crate) fn run(data: &[u8]) -> String {
         let mut contents = Vec::new();
         loop {
             //println!("n: '{}'", data[p] as char);
-            let n = data[p] - '0' as u8;
+            let n = data[p] - b'0';
             if n >= 9 {
                 p += 15;
                 break;
             }
             p += 2;
             let cont_start = p;
-            while data[p] != ' ' as u8 {
+            while data[p] != b' ' {
                 p += 1;
             }
             p += 1;
-            while data[p] != ' ' as u8 {
+            while data[p] != b' ' {
                 p += 1;
             } // now on space before bags
             let cont_name = &data[cont_start..p];
@@ -71,10 +71,10 @@ pub(crate) fn run(data: &[u8]) -> String {
                 p += 5;
             }
             //println!("d: '{}'", data[p] as char);
-            if data[p] == '.' as u8 {
+            if data[p] == b'.' {
                 p += 2; // not sure why not 1 but this works
                 break;
-            } else if data[p] == ',' as u8 {
+            } else if data[p] == b',' {
                 // more bags
                 p += 2;
             } else {

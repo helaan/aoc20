@@ -12,15 +12,15 @@ fn seat_nr(b: &[u8]) -> usize {
     r
 }
 
-pub(crate) fn run(b: &[u8]) -> String {
+pub(crate) fn run(data: &[u8]) -> String {
     let mut p = 0;
-    let len = b.len();
+    let len = data.len();
     let mut max = 0;
     let mut min = 1024;
     //let mut seats = BitSet::with_capacity(1024);
     let mut seats = [0 as u32; 32];
     while p < len {
-        let x = seat_nr(&b[p..p + 10]);
+        let x = seat_nr(&data[p..p + 10]);
         if x > max {
             max = x
         }

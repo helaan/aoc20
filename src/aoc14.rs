@@ -1,12 +1,12 @@
 use rustc_hash::FxHashMap;
 
 fn atoi(data: &[u8], p: &mut usize, stop: u8) -> u64 {
-    let mut r: u64 = (data[*p] - '0' as u8) as u64;
+    let mut r: u64 = (data[*p] - b'0') as u64;
     *p += 1;
     while data[*p] != stop {
         //dbg!(data[*p]);
         r *= 10;
-        r += (data[*p] - '0' as u8) as u64;
+        r += (data[*p] - b'0') as u64;
         *p += 1;
     }
     r
@@ -67,8 +67,8 @@ pub(crate) fn run(data: &[u8]) -> String {
 
     while p < len {
         //dbg!(data[p] as char);
-        match data[p] as char {
-            'a' => {
+        match data[p] {
+            b'a' => {
                 p += 6;
                 //dbg!(data[p] as char);
                 mask0 = u64::MAX;
@@ -76,21 +76,21 @@ pub(crate) fn run(data: &[u8]) -> String {
                 maskx = 0;
                 for i in (0..36).rev() {
                     //dbg!(data[p] as char);
-                    match data[p] as char {
-                        '0' => mask0 ^= 1 << i,
-                        '1' => mask1 |= 1 << i,
-                        'X' => maskx |= 1 << i,
+                    match data[p] {
+                        b'0' => mask0 ^= 1 << i,
+                        b'1' => mask1 |= 1 << i,
+                        b'X' => maskx |= 1 << i,
                         _ => unreachable!(data[p]),
                     }
                     p += 1;
                 }
                 p += 2;
             }
-            'e' => {
+            b'e' => {
                 p += 3;
-                let addr = atoi(data, &mut p, ']' as u8);
+                let addr = atoi(data, &mut p, b']');
                 p += 4;
-                let mut data = atoi(data, &mut p, '\n' as u8);
+                let mut data = atoi(data, &mut p, b'\n');
                 p += 2;
 
                 // println!("{:x} {:x} {:x} {:x}", addr, addr | mask1, data, maskx);
@@ -105,8 +105,8 @@ pub(crate) fn run(data: &[u8]) -> String {
         }
     }
 
-    let p1 = mem.values().fold(0, |x, y| x + y);
-    let p2 = mem2.map.values().fold(0, |x, y| x + y);
+    let p1: u64 = mem.values().sum();
+    let p2: u64 = mem2.map.values().sum();
     //dbg!(mem.len());
     //dbg!(mem2.map.len());
 

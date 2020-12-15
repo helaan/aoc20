@@ -3,8 +3,8 @@ fn chk_pid(x: &[u8]) -> bool {
         //  println!("pid len");
         return false;
     }
-    for p in 0..=8 {
-        if !(x[p] >= '0' as u8 && x[p] <= '9' as u8) {
+    for p in x.iter() {
+        if !(*p >= b'0' && *p <= b'9') {
             //    println!("pid invalid");
             return false;
         }
@@ -16,12 +16,12 @@ fn chk_ecl(x: &[u8]) -> bool {
     if x.len() != 3 {
         return false;
     }
-    match x[0] as char {
-        'a' => x[1] == 'm' as u8 && x[2] == 'b' as u8,
-        'b' => (x[1] == 'l' as u8 && x[2] == 'u' as u8) || (x[1] == 'r' as u8 && x[2] == 'n' as u8),
-        'g' => x[1] == 'r' as u8 && (x[2] == 'y' as u8 || x[2] == 'n' as u8),
-        'h' => x[1] == 'z' as u8 && x[2] == 'l' as u8,
-        'o' => x[1] == 't' as u8 && x[2] == 'h' as u8,
+    match x[0] {
+        b'a' => x[1] == b'm' && x[2] == b'b',
+        b'b' => (x[1] == b'l' && x[2] == b'u') || (x[1] == b'r' && x[2] == b'n'),
+        b'g' => x[1] == b'r' && (x[2] == b'y' || x[2] == b'n'),
+        b'h' => x[1] == b'z' && x[2] == b'l',
+        b'o' => x[1] == b't' && x[2] == b'h',
 
         _ => false,
     }
@@ -32,12 +32,12 @@ fn chk_hcl(x: &[u8]) -> bool {
         //   println!("hcl len");
         return false;
     }
-    if x[0] != '#' as u8 {
+    if x[0] != b'#' {
         //  println!("hcl# invalid");
         return false;
     }
-    for p in 1..=6 {
-        if !((x[p] >= '0' as u8 && x[p] <= '9' as u8) || (x[p] >= 'a' as u8 && x[p] <= 'f' as u8)) {
+    for p in x.iter().skip(1) {
+        if !((*p >= b'0' && *p <= b'9') || (*p >= b'a' && *p <= b'f')) {
             //    println!("hcl invalid");
             return false;
         }
@@ -53,20 +53,17 @@ fn chk_hgt(x: &[u8]) -> bool {
     match x.len() {
         4 => {
             //in
-            let v = (x[0] - '0' as u8) * 10 + x[1] - '0' as u8;
+            let v = (x[0] - b'0') * 10 + x[1] - b'0';
             //    println!("v= {}", v);
-            v >= 59 && v <= 76 && x[2] == 'i' as u8 && x[3] == 'n' as u8
+            v >= 59 && v <= 76 && x[2] == b'i' && x[3] == b'n'
             //   println!("hgtin invalid");
         }
         5 => {
-            x[0] == '1' as u8
-                && ((x[1] >= '5' as u8
-                    && x[1] <= '8' as u8
-                    && x[2] >= '0' as u8
-                    && x[2] <= '9' as u8)
-                    || (x[1] == '9' as u8 && x[2] >= '0' as u8 && x[2] <= '3' as u8))
-                && x[3] == 'c' as u8
-                && x[4] == 'm' as u8
+            x[0] == b'1'
+                && ((x[1] >= b'5' && x[1] <= b'8' && x[2] >= b'0' && x[2] <= b'9')
+                    || (x[1] == b'9' && x[2] >= b'0' && x[2] <= b'3'))
+                && x[3] == b'c'
+                && x[4] == b'm'
         }
         _ => false,
     }
@@ -77,10 +74,9 @@ fn chk_eyr(x: &[u8]) -> bool {
         //println!("eyr len");
         return false;
     }
-    x[0] == '2' as u8
-        && x[1] == '0' as u8
-        && ((x[2] == '2' as u8 && x[3] >= '0' as u8 && x[3] <= '9' as u8)
-            || (x[2] == '3' as u8 && x[3] == '0' as u8))
+    x[0] == b'2'
+        && x[1] == b'0'
+        && ((x[2] == b'2' && x[3] >= b'0' && x[3] <= b'9') || (x[2] == b'3' && x[3] == b'0'))
 }
 
 fn chk_iyr(x: &[u8]) -> bool {
@@ -88,10 +84,9 @@ fn chk_iyr(x: &[u8]) -> bool {
         //println!("iyr len");
         return false;
     }
-    x[0] == '2' as u8
-        && x[1] == '0' as u8
-        && ((x[2] == '1' as u8 && x[3] >= '0' as u8 && x[3] <= '9' as u8)
-            || (x[2] == '2' as u8 && x[3] == '0' as u8))
+    x[0] == b'2'
+        && x[1] == b'0'
+        && ((x[2] == b'1' && x[3] >= b'0' && x[3] <= b'9') || (x[2] == b'2' && x[3] == b'0'))
 }
 
 fn chk_byr(x: &[u8]) -> bool {
@@ -99,15 +94,9 @@ fn chk_byr(x: &[u8]) -> bool {
         //println!("byr len");
         return false;
     }
-    match x[0] as char {
-        '1' => {
-            x[1] == '9' as u8
-                && x[2] >= '2' as u8
-                && x[2] <= '9' as u8
-                && x[3] >= '0' as u8
-                && x[3] <= '9' as u8
-        }
-        '2' => (x[1] == '0' as u8 && x[2] == '0' as u8 && x[3] >= '0' as u8 && x[3] <= '2' as u8),
+    match x[0] {
+        b'1' => x[1] == b'9' && x[2] >= b'2' && x[2] <= b'9' && x[3] >= b'0' && x[3] <= b'9',
+        b'2' => (x[1] == b'0' && x[2] == b'0' && x[3] >= b'0' && x[3] <= b'2'),
         _ => false,
     }
 }
@@ -123,9 +112,9 @@ pub(crate) fn run(b: &[u8]) -> String {
     let mut ok2 = true;
 
     while p < len {
-        let fieldname = b[p] as char;
+        let fieldname = b[p];
         //dbg!(p, b[p] as char);
-        if fieldname == '\n' {
+        if fieldname == b'\n' {
             if ok1 == 0b0111_1111 {
                 p1 += 1;
                 if ok2 {
@@ -141,18 +130,18 @@ pub(crate) fn run(b: &[u8]) -> String {
         p += 4;
         let pstart = p;
         p += 1; // assume there is at least 1 character of value
-        while b[p] != ' ' as u8 && b[p] != '\n' as u8 {
+        while b[p] != b' ' && b[p] != b'\n' {
             p += 1;
         }
 
         match fieldname {
-            'p' => {
+            b'p' => {
                 // pid
                 ok1 |= 1;
                 ok2 &= chk_pid(&b[pstart..p]);
             }
-            'e' => {
-                if b[fieldname2p] == 'y' as u8 {
+            b'e' => {
+                if b[fieldname2p] == b'y' {
                     //eyr
                     ok1 |= 16;
                     ok2 &= chk_eyr(&b[pstart..p]);
@@ -162,8 +151,8 @@ pub(crate) fn run(b: &[u8]) -> String {
                     ok2 &= chk_ecl(&b[pstart..p]);
                 }
             }
-            'h' => {
-                if b[fieldname2p] == 'c' as u8 {
+            b'h' => {
+                if b[fieldname2p] == b'c' {
                     // hcl
                     ok1 |= 4;
                     ok2 &= chk_hcl(&b[pstart..p]);
@@ -173,15 +162,15 @@ pub(crate) fn run(b: &[u8]) -> String {
                     ok2 &= chk_hgt(&b[pstart..p]);
                 }
             }
-            'i' => {
+            b'i' => {
                 ok1 |= 32;
                 ok2 &= chk_iyr(&b[pstart..p]);
             }
-            'b' => {
+            b'b' => {
                 ok1 |= 64;
                 ok2 &= chk_byr(&b[pstart..p]);
             }
-            'c' => {} //cid
+            b'c' => {} //cid
             _ => unreachable!(fieldname),
         }
         p += 1;

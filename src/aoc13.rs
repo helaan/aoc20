@@ -2,11 +2,11 @@ pub(crate) fn run(data: &[u8]) -> String {
     let mut p = 1;
     let len = data.len();
 
-    let mut ts: usize = (data[0] - '0' as u8) as usize;
+    let mut ts: usize = (data[0] - b'0') as usize;
 
-    while p < len && data[p] != '\n' as u8 {
+    while p < len && data[p] != b'\n' {
         ts *= 10;
-        ts += (data[p] - '0' as u8) as usize;
+        ts += (data[p] - b'0') as usize;
         p += 1;
     }
     p += 1;
@@ -15,17 +15,17 @@ pub(crate) fn run(data: &[u8]) -> String {
     let mut offset = 0;
 
     while p < len {
-        if data[p] == 'x' as u8 {
+        if data[p] == b'x' {
             p += 2;
             offset += 1;
         } else {
             //dbg!(data[p] as char);
-            let mut acc: u16 = (data[p] - '0' as u8) as u16;
+            let mut acc: u16 = (data[p] - b'0') as u16;
             p += 1;
-            while data[p] != ',' as u8 && data[p] != '\n' as u8 {
+            while data[p] != b',' && data[p] != b'\n' {
                 //dbg!(acc, data[p] as char);
                 acc *= 10;
-                acc += (data[p] - '0' as u8) as u16;
+                acc += (data[p] - b'0') as u16;
                 p += 1;
             }
             p += 1;

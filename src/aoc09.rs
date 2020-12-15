@@ -9,8 +9,8 @@ pub(crate) fn run(data: &[u8]) -> String {
     let mut num = Vec::new();
 
     let mut x: i64 = 0;
-    data.iter().for_each(|b| match *b as char {
-        '\n' => {
+    data.iter().for_each(|b| match *b {
+        b'\n' => {
             num.push(x);
             x = 0;
         }
@@ -21,8 +21,8 @@ pub(crate) fn run(data: &[u8]) -> String {
     });
 
     let mut set = FxHashSet::default();
-    for i in 0..PREAMBLE_SIZE {
-        set.insert(num[i]);
+    for i in num.iter().take(PREAMBLE_SIZE) {
+        set.insert(*i);
     }
 
     let mut p1 = 0;
@@ -30,8 +30,8 @@ pub(crate) fn run(data: &[u8]) -> String {
     for i in PREAMBLE_SIZE..num.len() {
         let target = num[i];
         let mut contain = false;
-        for p in i - PREAMBLE_SIZE..i {
-            if set.contains(&(target - num[p])) {
+        for p in num.iter().skip(i - PREAMBLE_SIZE).take(PREAMBLE_SIZE) {
+            if set.contains(&(target - *p)) {
                 contain = true;
                 break;
             }
@@ -63,13 +63,12 @@ pub(crate) fn run(data: &[u8]) -> String {
     }
     let mut min = num[start];
     let mut max = num[start];
-    for i in (start + 1)..=end {
-        let d = num[i];
-        if d < min {
-            min = d
+    for d in num.iter().take(end + 1).skip(start + 1) {
+        if *d < min {
+            min = *d
         }
-        if d > max {
-            max = d
+        if *d > max {
+            max = *d
         }
         //println!("{} {} {}", d, min, max);
     }

@@ -4,19 +4,19 @@ pub(crate) fn run(b: &[u8]) -> String {
     let mut good = 0;
     let mut good2 = 0;
     while p < len {
-        let mut min = b[p] - '0' as u8;
+        let mut min = b[p] - b'0';
         p += 1; // possible second number or dash
-        while b[p] != '-' as u8 {
+        while b[p] != b'-' {
             min *= 10;
-            min += b[p] - '0' as u8;
+            min += b[p] - b'0';
             p += 1;
         }
         p += 1; //move over the dash
-        let mut max = b[p] - '0' as u8;
+        let mut max = b[p] - b'0';
         p += 1; // possible second number or space
-        while b[p] != ' ' as u8 {
+        while b[p] != b' ' {
             max *= 10;
-            max += b[p] - '0' as u8;
+            max += b[p] - b'0';
             p += 1;
         }
         p += 1; //move over the space
@@ -28,7 +28,7 @@ pub(crate) fn run(b: &[u8]) -> String {
         }
         p += 1; //move over the space
         let mut cnt = 0;
-        while b[p] != '\n' as u8 {
+        while b[p] != b'\n' {
             if b[p] == c {
                 cnt += 1;
             }

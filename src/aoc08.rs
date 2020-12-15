@@ -6,7 +6,7 @@ enum Op {
     Jmp(i32),
 }
 
-fn eval(ops: &Vec<Op>, corrupt: usize) -> Option<i32> {
+fn eval(ops: &[Op], corrupt: usize) -> Option<i32> {
     let mut visited = BitSet::with_capacity(ops.len());
     let mut ip = 0;
     let mut acc: i32 = 0;
@@ -53,19 +53,19 @@ pub(crate) fn run(data: &[u8]) -> String {
         p += 5;
         let mut o = data[p] as i32 - '0' as i32;
         p += 1;
-        while data[p] != '\n' as u8 {
+        while data[p] != b'\n' {
             o *= 10;
             o += data[p] as i32 - '0' as i32;
             p += 1;
         }
         p += 1;
-        if data[sigid] == '-' as u8 {
+        if data[sigid] == b'-' {
             o *= -1;
         }
-        ops.push(match data[opid] as char {
-            'a' => Op::Acc(o),
-            'j' => Op::Jmp(o),
-            'n' => Op::Nop(o),
+        ops.push(match data[opid] {
+            b'a' => Op::Acc(o),
+            b'j' => Op::Jmp(o),
+            b'n' => Op::Nop(o),
             x => unreachable!(x),
         })
     }
