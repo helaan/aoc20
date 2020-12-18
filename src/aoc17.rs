@@ -146,7 +146,7 @@ pub(crate) fn run(data: &[u8]) -> String {
         max2.1 = y;
     }
 
-    for i in 1..=6 {
+    for _i in 1..=6 {
         //dbg!(dim.len());
         let mut new_dim = FxHashSet::default();
         for x in min.0 - 1..=max.0 + 1 {
@@ -206,7 +206,7 @@ pub(crate) fn run(data: &[u8]) -> String {
     let mut min = min2;
     let mut max = max2;
 
-    for i in 1..=6 {
+    for _i in 1..=6 {
         //dbg!(dim.len());
         let mut new_dim = FxHashSet::default();
         for x in min.0 - 1..=max.0 + 1 {
